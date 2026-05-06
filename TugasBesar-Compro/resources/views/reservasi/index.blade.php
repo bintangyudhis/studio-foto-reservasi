@@ -1,17 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-primary text-white py-5">
-        <div class="container text-center">
-            <h1 class="fw-bold">Buat Reservasi</h1>
-            <p class="lead">Pilih paket dan jadwal sesuai keinginan Anda.</p>
-        </div>
-    </div>
+    <style>
+        @media (max-width: 575.98px) {
+            .reservation-card {
+                padding: 18px !important;
+            }
+            .reservation-card .mb-3 {
+                margin-bottom: 12px !important;
+            }
+            .reservation-card .mb-4 {
+                margin-bottom: 16px !important;
+            }
+            .reservation-card textarea {
+                min-height: 88px;
+            }
+        }
+    </style>
 
-    <div class="container py-5">
+    <section class="page-header">
+        <div class="container text-center">
+            <div class="eyebrow">Booking</div>
+            <h1>Buat Reservasi</h1>
+            <p>Pilih paket dan jadwal sesuai keinginan Anda.</p>
+        </div>
+    </section>
+
+    <div class="container section-pad">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card border-0 shadow-sm p-4">
+                <div class="card p-4 p-md-5 reservation-card">
                     @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
@@ -113,8 +131,7 @@
                             <textarea name="notes" class="form-control" rows="3" placeholder="Contoh: Request background warna putih">{{ old('notes') }}</textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill">KIRIM
-                            RESERVASI</button>
+                        <button type="submit" class="btn btn-primary w-100 py-3">Kirim Reservasi</button>
                     </form>
                 </div>
             </div>

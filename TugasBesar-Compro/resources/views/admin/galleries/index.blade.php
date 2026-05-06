@@ -3,6 +3,20 @@
 @section('title', 'Manajemen Galeri - Sejenak Studio')
 
 @section('content')
+<style>
+    .admin-gallery-photo {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        object-fit: cover;
+        display: block;
+    }
+    @media (max-width: 575.98px) {
+        .admin-gallery-photo {
+            aspect-ratio: 3 / 4;
+        }
+    }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="fw-bold" style="color: #007A75;">Manajemen Galeri</h3>
     <button class="btn fw-bold text-dark" style="background:#FFD000;" data-bs-toggle="modal" data-bs-target="#addGalleryModal">
@@ -14,7 +28,7 @@
     @forelse($galleries as $gallery)
     <div class="col-md-3 col-sm-6">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden position-relative h-100">
-            <img src="{{ url('images/galleries/' . $gallery->image) }}" onerror="this.src='https://via.placeholder.com/600x600?text={{ $gallery->category }}'" class="img-fluid" style="object-fit: cover; aspect-ratio: 1/1;" alt="{{ $gallery->title }}">
+            <img src="{{ url('images/galleries/' . $gallery->image) }}" onerror="this.onerror=null; this.src='{{ asset('images/sejenak-logo.svg') }}'; this.style.objectFit='contain'; this.style.padding='28px';" class="admin-gallery-photo" alt="{{ $gallery->title }}">
             
             <div class="p-2 text-center bg-white">
                 <span class="badge bg-primary mb-1">{{ $gallery->category }}</span>

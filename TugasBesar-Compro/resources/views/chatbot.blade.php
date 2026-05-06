@@ -7,299 +7,449 @@
     <title>Chatbot - Sejenak Studio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --teal: #137887;
+            --teal-dark: #0d6472;
+            --cream: #fffaf0;
+            --accent: #f7a900;
+            --accent-soft: #ffc841;
+            --line: rgba(19, 120, 135, .16);
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: #e5ddd5;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9c0b5' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: clamp(18px, 5vw, 54px);
+            background:
+                radial-gradient(circle at 12% 88%, rgba(247,169,0,.28) 0 16%, transparent 16.5%),
+                radial-gradient(circle at 88% 12%, rgba(247,169,0,.22) 0 12%, transparent 12.5%),
+                linear-gradient(135deg, #f7fbfc 0%, #eef5f7 100%);
+            color: var(--teal-dark);
+            font-family: 'Manrope', sans-serif;
         }
 
-        /* ========== HEADER ========== */
+        .chat-shell {
+            width: min(100%, 980px);
+            min-height: calc(100vh - clamp(36px, 10vw, 108px));
+            display: grid;
+            grid-template-columns: minmax(260px, .82fr) minmax(320px, 420px);
+            align-items: center;
+            gap: clamp(22px, 5vw, 54px);
+            margin: auto;
+        }
+
+        .chat-intro .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(48px, 8vw, 84px);
+            font-style: italic;
+            line-height: .95;
+            margin-bottom: 22px;
+        }
+
+        .chat-intro p {
+            max-width: 420px;
+            color: #5d7d82;
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+
+        .chat-intro a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent);
+            border-radius: 999px;
+            color: var(--teal-dark);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            padding: 13px 22px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: transform .2s ease, background .2s ease;
+        }
+
+        .chat-intro a:hover {
+            background: var(--accent-soft);
+            transform: translateY(-2px);
+        }
+
+        .chat-widget {
+            width: min(100%, 420px);
+            height: min(720px, calc(100vh - 72px));
+            min-height: 580px;
+            display: flex;
+            flex-direction: column;
+            justify-self: end;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid rgba(255,255,255,.72);
+            border-radius: 24px;
+            box-shadow: 0 28px 80px rgba(13, 100, 114, .18);
+        }
+
         .chat-header {
-            background: #075e54;
-            color: white;
-            padding: 10px 16px;
+            z-index: 10;
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            z-index: 10;
             flex-shrink: 0;
+            padding: 15px 18px;
+            background: var(--teal);
+            color: white;
         }
 
         .back-btn {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(255,255,255,.16);
+            border-radius: 10px;
             color: white;
-            text-decoration: none;
-            font-size: 20px;
+            font-size: 16px;
             line-height: 1;
+            text-decoration: none;
         }
 
         .bot-avatar {
             width: 42px;
             height: 42px;
-            background: #25d366;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
             flex-shrink: 0;
+            background: rgba(255,255,255,.18);
+            border-radius: 14px;
+            color: white;
+            font-size: 20px;
         }
 
-        .bot-info h6 { margin: 0; font-size: 15px; font-weight: 600; }
-        .bot-info small { font-size: 12px; color: #b2dfdb; }
+        .bot-info h6 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 400;
+        }
 
-        /* ========== CHAT AREA ========== */
+        .bot-info small {
+            color: rgba(255,255,255,.78);
+            font-size: 12px;
+        }
+
         #chat-area {
             flex: 1;
-            overflow-y: auto;
-            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 8px;
+            overflow-y: auto;
+            padding: 20px 18px;
+            background: #ffffff;
             scroll-behavior: smooth;
         }
 
-        /* Scrollbar */
         #chat-area::-webkit-scrollbar { width: 6px; }
-        #chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+        #chat-area::-webkit-scrollbar-thumb { background: rgba(19,120,135,.24); border-radius: 999px; }
 
-        /* ========== MESSAGE BUBBLES ========== */
         .msg-wrapper {
             display: flex;
             flex-direction: column;
-            max-width: 72%;
-            animation: fadeUp 0.2s ease;
+            max-width: 78%;
+            animation: fadeUp .2s ease;
         }
 
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .msg-wrapper.user  { align-self: flex-end;  align-items: flex-end; }
-        .msg-wrapper.bot   { align-self: flex-start; align-items: flex-start; }
+        .msg-wrapper.user { align-self: flex-end; align-items: flex-end; }
+        .msg-wrapper.bot { align-self: flex-start; align-items: flex-start; }
 
         .bubble {
-            padding: 9px 14px;
-            border-radius: 8px;
+            position: relative;
+            padding: 10px 14px;
+            border-radius: 16px;
+            box-shadow: 0 8px 22px rgba(13,100,114,.08);
             font-size: 14px;
             line-height: 1.5;
-            position: relative;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.12);
             white-space: pre-wrap;
             word-break: break-word;
         }
 
         .bubble.user-bubble {
-            background: #dcf8c6;
-            border-top-right-radius: 2px;
+            background: var(--teal);
+            color: white;
+            border-top-right-radius: 5px;
         }
 
         .bubble.bot-bubble {
-            background: #ffffff;
-            border-top-left-radius: 2px;
+            background: #fff7df;
+            color: var(--teal-dark);
+            border-top-left-radius: 5px;
         }
 
         .msg-time {
+            color: #8ca2a6;
             font-size: 11px;
-            color: #999;
             margin-top: 2px;
             padding: 0 4px;
         }
 
-        /* ========== TYPING INDICATOR ========== */
         #typing-indicator {
             display: none;
             align-self: flex-start;
-            background: white;
-            border-radius: 8px;
-            border-top-left-radius: 2px;
+            background: #fff7df;
+            border-radius: 16px;
+            border-top-left-radius: 5px;
             padding: 10px 16px;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.12);
-            animation: fadeUp 0.2s ease;
+            box-shadow: 0 8px 22px rgba(13,100,114,.08);
+            animation: fadeUp .2s ease;
         }
 
         .typing-dots {
+            height: 18px;
             display: flex;
             align-items: center;
             gap: 4px;
-            height: 18px;
         }
 
         .typing-dots span {
             width: 7px;
             height: 7px;
-            background: #aaa;
+            background: var(--teal);
             border-radius: 50%;
             animation: typing 1.2s infinite ease-in-out;
         }
-        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        .typing-dots span:nth-child(2) { animation-delay: .2s; }
+        .typing-dots span:nth-child(3) { animation-delay: .4s; }
 
         @keyframes typing {
             0%, 60%, 100% { transform: translateY(0); }
-            30%            { transform: translateY(-5px); }
+            30% { transform: translateY(-5px); }
         }
 
-        /* ========== DATE SEPARATOR ========== */
         .date-separator {
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 8px 0;
         }
+
         .date-separator span {
-            background: rgba(255,255,255,0.7);
-            padding: 3px 10px;
-            border-radius: 8px;
+            background: #eef7f8;
+            border-radius: 999px;
+            color: #5d7d82;
             font-size: 12px;
-            color: #555;
+            padding: 4px 11px;
         }
 
-        /* ========== QUICK REPLIES ========== */
         .quick-replies {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            padding: 6px 16px;
-            background: transparent;
+            gap: 7px;
+            flex-shrink: 0;
+            padding: 10px 14px 8px;
+            background: #ffffff;
+            border-top: 1px solid rgba(19,120,135,.08);
         }
 
         .quick-reply-btn {
             background: white;
-            border: 1px solid #25d366;
-            color: #075e54;
-            border-radius: 16px;
-            padding: 5px 12px;
-            font-size: 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--teal-dark);
             cursor: pointer;
-            transition: all 0.15s;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px;
+            padding: 6px 12px;
+            transition: all .15s ease;
         }
+
         .quick-reply-btn:hover {
-            background: #25d366;
+            background: var(--teal);
             color: white;
         }
 
-        /* ========== INPUT AREA ========== */
         .chat-footer {
-            background: #f0f0f0;
-            padding: 8px 12px;
             display: flex;
             align-items: center;
             gap: 8px;
             flex-shrink: 0;
+            padding: 12px;
+            background: #ffffff;
+            border-top: 1px solid rgba(19,120,135,.12);
         }
 
         #msg-input {
             flex: 1;
-            border: none;
-            border-radius: 24px;
-            padding: 10px 18px;
-            font-size: 14px;
-            font-family: 'Poppins', sans-serif;
-            background: white;
-            outline: none;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            resize: none;
             max-height: 100px;
+            resize: none;
+            background: #f8fbfb;
+            border: 1px solid rgba(19,120,135,.12);
+            border-radius: 16px;
+            box-shadow: none;
+            color: var(--teal-dark);
+            font-family: 'Manrope', sans-serif;
+            font-size: 14px;
             line-height: 1.4;
+            outline: none;
+            padding: 12px 16px;
         }
 
         #send-btn {
             width: 46px;
             height: 46px;
-            background: #075e54;
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s;
             flex-shrink: 0;
+            background: var(--accent);
+            border: none;
+            border-radius: 16px;
+            color: var(--teal-dark);
+            cursor: pointer;
+            font-size: 18px;
+            transition: background .2s ease, transform .2s ease;
         }
-        #send-btn:hover { background: #128c7e; }
-        #send-btn:active { transform: scale(0.95); }
+
+        #send-btn:hover { background: var(--accent-soft); }
+        #send-btn:active { transform: scale(.95); }
+
+        @media (max-width: 860px) {
+            body {
+                overflow: auto;
+                padding: 16px;
+            }
+
+            .chat-shell {
+                min-height: calc(100vh - 32px);
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .chat-intro {
+                text-align: center;
+            }
+
+            .chat-intro p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .chat-widget {
+                justify-self: center;
+                width: min(100%, 420px);
+                height: min(650px, 72vh);
+                min-height: 500px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 0;
+                background: #ffffff;
+            }
+
+            .chat-shell {
+                min-height: 100vh;
+                display: block;
+            }
+
+            .chat-intro {
+                display: none;
+            }
+
+            .chat-widget {
+                width: 100%;
+                height: 100vh;
+                min-height: 100vh;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .chat-header {
+                padding-top: max(14px, env(safe-area-inset-top));
+            }
+
+            .msg-wrapper {
+                max-width: 86%;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="chat-shell">
+        <aside class="chat-intro">
+            <div class="brand">Sejenak<br>Bot</div>
+            <p>Tanyakan lokasi, jam buka, paket foto, cara reservasi, atau detail studio. Bot akan membantu sebelum kamu lanjut booking.</p>
+            <a href="{{ route('home') }}"><i class="fas fa-arrow-left"></i> Kembali ke Home</a>
+        </aside>
 
-    <!-- ========== HEADER ========== -->
-    <div class="chat-header">
-        <a href="{{ route('home') }}" class="back-btn" title="Kembali ke Home">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-        <div class="bot-avatar">
-            <i class="fas fa-robot"></i>
-        </div>
-        <div class="bot-info">
-            <h6>Sejenak Bot</h6>
-            <small id="bot-status">Online</small>
-        </div>
-    </div>
-
-    <!-- ========== CHAT MESSAGES ========== -->
-    <div id="chat-area">
-
-        <div class="date-separator">
-            <span>Hari ini, {{ now()->translatedFormat('d F Y') }}</span>
-        </div>
-
-        <!-- Pesan selamat datang dari bot -->
-        <div class="msg-wrapper bot" id="welcome-msg">
-            <div class="bubble bot-bubble">
-                Halo! 👋 Saya <strong>Sejenak Bot</strong>, asisten virtual Sejenak Studio Purwokerto.<br><br>
-                Silakan tanyakan apa saja seputar studio kami. Saya siap membantu!
+        <section class="chat-widget" aria-label="Chatbot Sejenak Studio">
+            <div class="chat-header">
+                <a href="{{ route('home') }}" class="back-btn" title="Kembali ke Home">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <div class="bot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="bot-info">
+                    <h6>Sejenak Bot</h6>
+                    <small id="bot-status">Online</small>
+                </div>
             </div>
-            <span class="msg-time">{{ now()->format('H:i') }}</span>
-        </div>
 
-        <!-- Typing indicator -->
-        <div id="typing-indicator">
-            <div class="typing-dots">
-                <span></span><span></span><span></span>
+            <div id="chat-area">
+                <div class="date-separator">
+                    <span>Hari ini, {{ now()->translatedFormat('d F Y') }}</span>
+                </div>
+
+                <div class="msg-wrapper bot" id="welcome-msg">
+                    <div class="bubble bot-bubble">
+                        Halo! Saya <strong>Sejenak Bot</strong>, asisten virtual Sejenak Studio Purwokerto.<br><br>
+                        Silakan tanyakan apa saja seputar studio kami. Saya siap membantu!
+                    </div>
+                    <span class="msg-time">{{ now()->format('H:i') }}</span>
+                </div>
+
+                <div id="typing-indicator">
+                    <div class="typing-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
             </div>
-        </div>
 
-    </div>
+            <div class="quick-replies" id="quick-replies">
+                <button class="quick-reply-btn" onclick="sendQuick('Lokasi studio di mana?')">Lokasi</button>
+                <button class="quick-reply-btn" onclick="sendQuick('Jam buka studio?')">Jam Buka</button>
+                <button class="quick-reply-btn" onclick="sendQuick('Berapa harga paket foto?')">Harga</button>
+                <button class="quick-reply-btn" onclick="sendQuick('Bagaimana cara reservasi?')">Reservasi</button>
+                <button class="quick-reply-btn" onclick="sendQuick('Kontak sejenak studio')">Kontak</button>
+            </div>
 
-    <!-- ========== QUICK REPLY SUGGESTIONS ========== -->
-    <div class="quick-replies" id="quick-replies">
-        <button class="quick-reply-btn" onclick="sendQuick('Lokasi studio di mana?')">📍 Lokasi</button>
-        <button class="quick-reply-btn" onclick="sendQuick('Jam buka studio?')">🕘 Jam Buka</button>
-        <button class="quick-reply-btn" onclick="sendQuick('Berapa harga paket foto?')">💰 Harga</button>
-        <button class="quick-reply-btn" onclick="sendQuick('Bagaimana cara reservasi?')">📝 Reservasi</button>
-        <button class="quick-reply-btn" onclick="sendQuick('Kontak sejenak studio')">📞 Kontak</button>
-    </div>
-
-    <!-- ========== INPUT AREA ========== -->
-    <div class="chat-footer">
-        <textarea
-            id="msg-input"
-            placeholder="Ketik pesan..."
-            rows="1"
-            autofocus
-        ></textarea>
-        <button id="send-btn" title="Kirim">
-            <i class="fas fa-paper-plane"></i>
-        </button>
+            <div class="chat-footer">
+                <textarea
+                    id="msg-input"
+                    placeholder="Ketik pesan..."
+                    rows="1"
+                    autofocus
+                ></textarea>
+                <button id="send-btn" title="Kirim">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </section>
     </div>
 
     <script>
-        // ======================================================
-        // KONFIGURASI
-        // ======================================================
         const CSRF_TOKEN  = document.querySelector('meta[name="csrf-token"]').content;
         const CHAT_URL    = "{{ route('chatbot.chat') }}";
         const chatArea    = document.getElementById('chat-area');
@@ -308,16 +458,13 @@
         const typingEl    = document.getElementById('typing-indicator');
         const botStatus   = document.getElementById('bot-status');
 
-        // ======================================================
-        // FUNGSI: Tambah bubble pesan ke layar
-        // ======================================================
         function appendMessage(text, sender) {
             const wrapper = document.createElement('div');
             wrapper.classList.add('msg-wrapper', sender);
 
             const bubble = document.createElement('div');
             bubble.classList.add('bubble', sender === 'user' ? 'user-bubble' : 'bot-bubble');
-            bubble.textContent = text; // pakai textContent agar aman dari XSS
+            bubble.textContent = text;
 
             const time = document.createElement('span');
             time.classList.add('msg-time');
@@ -325,115 +472,87 @@
 
             wrapper.appendChild(bubble);
             wrapper.appendChild(time);
-
-            // Sisipkan sebelum typing indicator agar urutan tetap benar
             chatArea.insertBefore(wrapper, typingEl);
             scrollToBottom();
         }
 
-        // ======================================================
-        // FUNGSI: Tampilkan / sembunyikan typing indicator
-        // ======================================================
         function showTyping() {
             typingEl.style.display = 'block';
-            botStatus.textContent  = 'sedang mengetik...';
+            botStatus.textContent = 'sedang mengetik...';
             scrollToBottom();
         }
 
         function hideTyping() {
             typingEl.style.display = 'none';
-            botStatus.textContent  = 'Online';
+            botStatus.textContent = 'Online';
         }
 
-        // ======================================================
-        // FUNGSI: Kirim pesan ke server via Fetch API
-        // ======================================================
         async function sendMessage() {
             const text = msgInput.value.trim();
             if (!text) return;
 
-            // Tampilkan pesan user di layar
             appendMessage(text, 'user');
             msgInput.value = '';
             autoResize();
-
-            // Nonaktifkan input sementara & tampilkan typing
             msgInput.disabled = true;
-            sendBtn.disabled  = true;
+            sendBtn.disabled = true;
             showTyping();
-
-            // Sembunyikan quick reply setelah pertama kali mengirim
             document.getElementById('quick-replies').style.display = 'none';
 
             try {
-                // Kirim ke server dengan Fetch API (AJAX, tanpa reload halaman)
                 const response = await fetch(CHAT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept':       'application/json',
+                        'Accept': 'application/json',
                         'X-CSRF-TOKEN': CSRF_TOKEN
                     },
                     body: JSON.stringify({ message: text })
                 });
 
                 const data = await response.json();
-
-                // Simulasi delay supaya terasa natural (seolah bot sedang berpikir)
                 await sleep(600 + Math.random() * 500);
 
                 hideTyping();
                 appendMessage(data.reply, 'bot');
-
             } catch (error) {
                 hideTyping();
                 appendMessage('Maaf, terjadi gangguan koneksi. Silakan coba lagi.', 'bot');
                 console.error('Chatbot error:', error);
             } finally {
                 msgInput.disabled = false;
-                sendBtn.disabled  = false;
+                sendBtn.disabled = false;
                 msgInput.focus();
             }
         }
 
-        // ======================================================
-        // FUNGSI: Kirim pesan dari tombol quick reply
-        // ======================================================
         function sendQuick(text) {
             msgInput.value = text;
             sendMessage();
         }
 
-        // ======================================================
-        // UTILITAS
-        // ======================================================
         function scrollToBottom() {
             chatArea.scrollTop = chatArea.scrollHeight;
         }
 
         function getCurrentTime() {
             const now = new Date();
-            return now.getHours().toString().padStart(2,'0') + ':' +
-                   now.getMinutes().toString().padStart(2,'0');
+            return now.getHours().toString().padStart(2, '0') + ':' +
+                   now.getMinutes().toString().padStart(2, '0');
         }
 
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        // Auto-resize textarea sesuai isi
         function autoResize() {
             msgInput.style.height = 'auto';
             msgInput.style.height = Math.min(msgInput.scrollHeight, 100) + 'px';
         }
 
-        // ======================================================
-        // EVENT LISTENERS
-        // ======================================================
         sendBtn.addEventListener('click', sendMessage);
 
         msgInput.addEventListener('keydown', function(e) {
-            // Enter = kirim, Shift+Enter = newline
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
@@ -441,8 +560,6 @@
         });
 
         msgInput.addEventListener('input', autoResize);
-
-        // Scroll ke bawah saat load
         scrollToBottom();
     </script>
 </body>
