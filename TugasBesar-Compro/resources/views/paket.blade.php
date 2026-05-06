@@ -3,7 +3,8 @@
 @section('content')
 <style>
     .price-card { display: flex; flex-direction: column; height: 100%; border: 1px solid var(--line); border-radius: var(--radius-lg); background: rgba(255,255,255,.42); overflow: hidden; }
-    .price-head { padding: clamp(20px, 3vw, 24px); border-bottom: 1px solid var(--line); }
+    .price-head { min-height: 142px; display: flex; flex-direction: column; justify-content: flex-start; padding: clamp(20px, 3vw, 24px); border-bottom: 1px solid var(--line); }
+    .price-head h2 { min-height: 68px; display: flex; align-items: flex-start; }
     .price-value { padding: 28px clamp(20px, 3vw, 24px) 12px; font-family: var(--serif); font-size: clamp(46px, 7vw, 58px); line-height: 1; }
     .price-body { display: flex; flex: 1; flex-direction: column; padding: 12px clamp(20px, 3vw, 24px) 26px; }
     .price-body li { border-top: 1px solid var(--line); padding: 12px 0; color: var(--muted); }
@@ -14,9 +15,11 @@
     .background-name { padding: 16px; border-top: 1px solid var(--line); font-family: var(--serif); font-size: 22px; font-style: italic; text-align: center; }
     @media (max-width: 575.98px) {
         .price-head {
+            min-height: 118px;
             padding: 14px;
         }
         .price-head h2 {
+            min-height: 54px;
             font-size: 22px;
         }
         .price-value {
