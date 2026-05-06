@@ -496,7 +496,6 @@
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('paket') ? 'is-current' : '' }}" href="{{ route('paket') }}">Paket</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('galeri') ? 'is-current' : '' }}" href="{{ route('galeri') }}">Galeri</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('informasi') ? 'is-current' : '' }}" href="{{ route('informasi') }}">Informasi</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('kontak') ? 'is-current' : '' }}" href="{{ route('kontak') }}">Kontak</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('chatbot.index') ? 'is-current' : '' }}" href="{{ route('chatbot.index') }}">Chatbot</a></li>
                     <li class="nav-item ms-lg-3">
                         <a class="btn btn-primary px-4 {{ request()->routeIs('reservasi.*') ? 'active' : '' }}" href="{{ route('reservasi.index') }}">Reservasi</a>

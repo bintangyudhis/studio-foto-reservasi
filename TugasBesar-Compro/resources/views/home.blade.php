@@ -8,11 +8,6 @@
         ->reject(fn ($file) => strtolower($file) === 'default.png')
         ->values();
 
-    $localPackageImages = collect(['jpg', 'jpeg', 'png', 'webp'])
-        ->flatMap(fn ($ext) => glob(public_path("images/packages/*.{$ext}")) ?: [])
-        ->map(fn ($path) => basename($path))
-        ->values();
-
     $heroSlides = $galleries
         ->filter(fn ($item) => $item->image && file_exists(public_path('images/galleries/' . $item->image)))
         ->map(fn ($item) => [
@@ -339,21 +334,18 @@
         font-size: 14px;
     }
     .package-card {
-        display: grid;
-        grid-template-rows: auto 1fr;
+        display: flex;
+        flex-direction: column;
         height: 100%;
         min-height: 100%;
         overflow: hidden;
-        background: transparent;
+        background: rgba(255, 255, 255, .42);
         border: 1px solid var(--line);
         border-radius: var(--radius-lg);
     }
-    .package-image {
-        aspect-ratio: 4 / 3;
-        background: var(--photo);
-    }
     .package-body {
         display: flex;
+        flex: 1;
         flex-direction: column;
         padding: 26px;
     }
@@ -567,9 +559,6 @@
         .package-card {
             border-radius: var(--radius-md);
         }
-        .package-image {
-            aspect-ratio: 1 / 1;
-        }
         .package-body .eyebrow {
             margin-bottom: 8px;
         }
@@ -577,15 +566,7 @@
             font-size: 20px;
             margin-bottom: 8px !important;
         }
-        .package-body .text-muted {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            font-size: 12px;
-            line-height: 1.55;
-            margin-bottom: 12px;
-        }
+        .package-body .text-muted { display: none; }
         .package-price {
             font-size: 24px;
             margin-bottom: 10px !important;
@@ -773,20 +754,8 @@
         </div>
         <div class="row g-4">
             @foreach($packages as $package)
-                @php
-                    $packageImage = $package->image && file_exists(public_path('images/packages/' . $package->image))
-                        ? $package->image
-                        : $localPackageImages->get($loop->index);
-                @endphp
                 <div class="col-6 col-md-4">
                     <article class="package-card">
-                        <div class="package-image">
-                            @if($packageImage)
-                                <img src="{{ url('images/packages/' . $packageImage) }}" alt="{{ $package->name }}">
-                            @else
-                                <div class="image-fallback">{{ $package->name }}</div>
-                            @endif
-                        </div>
                         <div class="package-body">
                             <div class="eyebrow">Paket</div>
                             <h3 class="h4 mb-3">{{ $package->name }}</h3>

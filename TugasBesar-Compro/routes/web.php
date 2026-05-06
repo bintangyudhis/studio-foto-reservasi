@@ -38,9 +38,8 @@ Route::get('/informasi', function () {
 // Redirect lama /faq ke /informasi agar tidak 404
 Route::redirect('/faq', '/informasi');
 
-Route::get('/kontak', function () {
-    return view('kontak');
-})->name('kontak');
+// Redirect lama /kontak ke /informasi karena kontak sudah digabung di halaman informasi
+Route::redirect('/kontak', '/informasi')->name('kontak');
 
 // --- RESERVATION ---
 Route::get('/reservasi', [ReservationController::class, 'index'])->name('reservasi.index');
