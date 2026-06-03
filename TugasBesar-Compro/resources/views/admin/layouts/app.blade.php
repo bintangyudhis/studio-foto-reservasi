@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Dashboard - Sejenak Studio')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Manrope:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --ink: #137887;
@@ -27,11 +30,14 @@
             --sans: "Manrope", sans-serif;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             min-height: 100vh;
             background:
-                radial-gradient(circle at 96% 4%, rgba(247,169,0,.18) 0 13%, transparent 13.5%),
+                radial-gradient(circle at 96% 4%, rgba(247, 169, 0, .18) 0 13%, transparent 13.5%),
                 linear-gradient(135deg, #fffaf0 0%, #f4fbfb 100%);
             color: var(--ink-deep);
             font-family: var(--sans);
@@ -47,7 +53,7 @@
             overflow-y: auto;
             padding: 24px 18px;
             background:
-                radial-gradient(circle at 12% 90%, rgba(247,169,0,.95) 0 14%, transparent 14.5%),
+                radial-gradient(circle at 12% 90%, rgba(247, 169, 0, .95) 0 14%, transparent 14.5%),
                 var(--ink);
             color: var(--white);
         }
@@ -83,7 +89,7 @@
             margin-bottom: 6px;
             padding: 11px 13px;
             border-radius: var(--radius-md);
-            color: rgba(255,255,255,.76);
+            color: rgba(255, 255, 255, .76);
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
@@ -92,13 +98,13 @@
 
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
-            background: rgba(255,255,255,.14);
+            background: rgba(255, 255, 255, .14);
             color: var(--white);
             transform: translateX(2px);
         }
 
         .logout-link {
-            color: rgba(255,226,226,.9) !important;
+            color: rgba(255, 226, 226, .9) !important;
         }
 
         .main-content {
@@ -107,7 +113,11 @@
             padding: clamp(22px, 4vw, 36px);
         }
 
-        h1, h2, h3, h4, h5 {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
             color: var(--ink) !important;
             font-family: var(--serif);
             font-weight: 400 !important;
@@ -118,11 +128,11 @@
         .alert {
             border-radius: var(--radius-lg) !important;
             border: 1px solid var(--line) !important;
-            box-shadow: 0 16px 42px rgba(13,100,114,.08) !important;
+            box-shadow: 0 16px 42px rgba(13, 100, 114, .08) !important;
         }
 
         .card {
-            background: rgba(255,255,255,.72);
+            background: rgba(255, 255, 255, .72);
             overflow: hidden;
         }
 
@@ -131,7 +141,7 @@
         .modal-footer,
         .bg-white,
         .bg-light {
-            background-color: rgba(255,255,255,.76) !important;
+            background-color: rgba(255, 255, 255, .76) !important;
         }
 
         .stat-card {
@@ -182,7 +192,7 @@
         .form-control:focus,
         .form-select:focus {
             border-color: var(--ink);
-            box-shadow: 0 0 0 .16rem rgba(19,120,135,.12);
+            box-shadow: 0 0 0 .16rem rgba(19, 120, 135, .12);
         }
 
         .form-label {
@@ -286,6 +296,7 @@
         }
 
         @media (max-width: 575.98px) {
+
             .admin-page-head,
             .d-flex.justify-content-between.align-items-center.mb-4 {
                 align-items: flex-start !important;
@@ -320,35 +331,44 @@
         }
     </style>
 </head>
+
 <body>
     <aside class="sidebar">
         <a class="sidebar-brand" href="{{ route('admin.dashboard') }}">Sejenak <span>Admin</span></a>
         <nav class="nav flex-column">
-            <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
-            <a class="nav-link {{ request()->routeIs('admin.reservations*') ? 'active' : '' }}" href="{{ route('admin.reservations') }}"><i class="fas fa-calendar-check"></i> Reservasi</a>
-            <a class="nav-link {{ request()->routeIs('admin.packages*') ? 'active' : '' }}" href="{{ route('admin.packages') }}"><i class="fas fa-boxes"></i> Paket Layanan</a>
-            <a class="nav-link {{ request()->routeIs('admin.galleries*') ? 'active' : '' }}" href="{{ route('admin.galleries') }}"><i class="fas fa-images"></i> Galeri Foto</a>
-            <a class="nav-link {{ request()->routeIs('admin.faqs*') ? 'active' : '' }}" href="{{ route('admin.faqs') }}"><i class="fas fa-question-circle"></i> FAQ & Bot</a>
+            <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
+                href="{{ route('admin.dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a class="nav-link {{ request()->routeIs('admin.reservations*') ? 'active' : '' }}"
+                href="{{ route('admin.reservations') }}"><i class="fas fa-calendar-check"></i> Reservasi</a>
+            <a class="nav-link {{ request()->routeIs('admin.packages*') ? 'active' : '' }}"
+                href="{{ route('admin.packages') }}"><i class="fas fa-boxes"></i> Paket Layanan</a>
+            <a class="nav-link {{ request()->routeIs('admin.galleries*') ? 'active' : '' }}"
+                href="{{ route('admin.galleries') }}"><i class="fas fa-images"></i> Galeri Foto</a>
+            <a class="nav-link {{ request()->routeIs('admin.faqs*') ? 'active' : '' }}"
+                href="{{ route('admin.faqs') }}"><i class="fas fa-question-circle"></i> FAQ & Bot</a>
+            <a class="nav-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}"
+                href="{{ route('admin.users') }}"><i class="fas fa-users"></i> Manajemen Akun</a>
             <hr class="border-light opacity-50">
-            <form action="{{ route('logout') }}" method="POST">
+            <form action="{{ route('admin.logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="nav-link logout-link bg-transparent border-0 text-start w-100"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <button type="submit" class="nav-link logout-link bg-transparent border-0 text-start w-100"><i
+                        class="fas fa-sign-out-alt"></i> Logout</button>
             </form>
         </nav>
     </aside>
 
     <main class="main-content">
-        @if(session('success'))
+        @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
-        @if($errors->any())
+        @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <ul class="mb-0">
-                    @foreach($errors->all() as $error)
+                    @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
@@ -361,4 +381,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

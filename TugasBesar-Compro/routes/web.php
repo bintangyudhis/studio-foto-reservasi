@@ -6,13 +6,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Models\ServicePackage;
 use App\Models\Gallery;
 use App\Models\Faq;
 
 // --- PUBLIC ROUTES ---
 Route::get('/', function () {
-    $packages = ServicePackage::take(3)->get();
+    $packages = ServicePackage::all();
     $galleries = Gallery::latest()->take(6)->get();
     return view('home', compact('packages', 'galleries'));
 })->name('home');
@@ -42,9 +43,16 @@ Route::redirect('/faq', '/informasi');
 Route::redirect('/kontak', '/informasi')->name('kontak');
 
 // --- RESERVATION ---
-Route::get('/reservasi', [ReservationController::class, 'index'])->name('reservasi.index');
-Route::post('/reservasi', [ReservationController::class, 'store'])->name('reservasi.store');
-Route::get('/reservasi/sukses', [ReservationController::class, 'success'])->name('reservasi.success');
+Route::get('/reservasi', [ReservationController::class, 'index'])->middleware('auth')->name('reservasi.index');
+Route::post('/reservasi', [ReservationController::class, 'store'])->middleware('auth')->name('reservasi.store');
+Route::get('/reservasi/sukses', [ReservationController::class, 'success'])->middleware('auth')->name('reservasi.success');
+
+// --- AUTH ROUTES (Register & Login) ---
+Route::get('/register', [AuthController::class, 'showRegister'])->middleware('guest')->name('register');
+Route::post('/register', [AuthController::class, 'register'])->middleware('guest')->name('register.post');
+Route::get('/login', [AuthController::class, 'showLogin'])->middleware('guest')->name('login');
+Route::post('/login', [AuthController::class, 'login'])->middleware('guest')->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // --- CHATBOT ---
 Route::get('/chatbot', [ChatbotController::class, 'index'])->name('chatbot.index');
@@ -53,13 +61,13 @@ Route::post('/chatbot/chat', [ChatbotController::class, 'handle'])->name('chatbo
 // --- ADMIN SIDE (With Auth Middleware) ---
 Route::prefix('admin')->group(function () {
     // Login routes (Manual for simplicity if Auth not scaffolded)
-    Route::get('/login', [AdminController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AdminController::class, 'login'])->name('login.post');
-    Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+    Route::get('/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [AdminController::class, 'login'])->name('admin.login.post');
+    Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-        
+
         // Reservasi
         Route::get('/reservasi', [AdminController::class, 'reservations'])->name('admin.reservations');
         Route::get('/reservasi/{reservation}/edit', [AdminController::class, 'editReservation'])->name('admin.reservations.edit');
@@ -73,7 +81,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/packages/{package}/edit', [AdminController::class, 'editPackage'])->name('admin.packages.edit');
         Route::put('/packages/{package}', [AdminController::class, 'updatePackage'])->name('admin.packages.update');
         Route::delete('/packages/{package}', [AdminController::class, 'deletePackage'])->name('admin.packages.destroy');
-        
+
         // FAQ
         Route::get('/faqs', [AdminController::class, 'faqs'])->name('admin.faqs');
         Route::post('/faqs', [AdminController::class, 'storeFaq'])->name('admin.faqs.store');
@@ -85,5 +93,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/galleries', [AdminController::class, 'galleries'])->name('admin.galleries');
         Route::post('/galleries', [AdminController::class, 'storeGallery'])->name('admin.galleries.store');
         Route::delete('/galleries/{gallery}', [AdminController::class, 'deleteGallery'])->name('admin.galleries.destroy');
+
+        // Users Management
+        Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
+        Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+        Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.destroy');
     });
 });

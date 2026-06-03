@@ -119,7 +119,7 @@ class AdminController extends Controller
         Faq::create($data);
         return back()->with('success', 'FAQ / Informasi berhasil ditambahkan.');
     }
-    
+
     public function editFaq(Faq $faq)
     {
         return view('admin.faqs.edit', compact('faq'));
@@ -131,7 +131,7 @@ class AdminController extends Controller
             'question' => 'required|string',
             'answer' => 'required|string'
         ]);
-        
+
         $faq->update($data);
         return redirect()->route('admin.faqs')->with('success', 'FAQ berhasil diubah.');
     }
@@ -167,11 +167,11 @@ class AdminController extends Controller
         $data['title'] = $request->input('title', 'Gallery');
 
         if ($request->hasFile('image')) {
-            $imageName = time().'.'.$request->image->extension();
+            $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images/galleries'), $imageName);
             $data['image'] = $imageName;
         } else {
-            $data['image'] = 'default.png'; 
+            $data['image'] = 'default.png';
         }
 
         Gallery::create($data);
@@ -182,6 +182,55 @@ class AdminController extends Controller
     {
         $gallery->delete();
         return back()->with('success', 'Foto Galeri berhasil dihapus.');
+    }
+
+    // --- USER MANAGEMENT ---
+    public function users()
+    {
+        $users = \App\Models\User::latest()->get();
+        return view('admin.users.index', compact('users'));
+    }
+
+    public function deleteUser(\App\Models\User $user)
+    {
+        // Proteksi: tidak boleh hapus user dengan role admin
+        if ($user->role === 'admin') {
+            return back()->with('error', 'Tidak bisa menghapus akun admin!');
+        }
+
+        $user->delete();
+        return back()->with('success', 'Akun pengguna berhasil dihapus.');
+    }
+
+    public function editUser(\App\Models\User $user)
+    {
+        // Hanya bisa edit user dengan role admin
+        if ($user->role !== 'admin') {
+            return back()->with('error', 'Hanya bisa edit data admin!');
+        }
+
+        return view('admin.users.edit', compact('user'));
+    }
+
+    public function updateUser(Request $request, \App\Models\User $user)
+    {
+        // Hanya bisa edit user dengan role admin
+        if ($user->role !== 'admin') {
+            return back()->with('error', 'Hanya bisa edit data admin!');
+        }
+
+        $validated = $request->validate([
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
+
+        $user->email = $validated['email'];
+        if ($validated['password']) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($validated['password']);
+        }
+        $user->save();
+
+        return redirect()->route('admin.users')->with('success', 'Data admin berhasil diperbarui.');
     }
 
     // --- AUTHENTICATION ---
@@ -198,12 +247,20 @@ class AdminController extends Controller
         ]);
 
         if (auth()->attempt($credentials)) {
+            // Check apakah user yang login adalah admin
+            if (auth()->user()->role !== 'admin') {
+                auth()->logout();
+                return back()->withErrors([
+                    'email' => 'Anda tidak memiliki akses ke admin panel.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
             return redirect()->intended('admin/dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Email atau password salah.',
         ])->onlyInput('email');
     }
 

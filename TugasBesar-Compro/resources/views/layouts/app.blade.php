@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sejenak Studio - Self Photo Studio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --ink: #137887;
@@ -29,8 +32,15 @@
             --sans: "Manrope", sans-serif;
         }
 
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; overflow-x: hidden; }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
         body {
             background: var(--paper);
             color: var(--ink);
@@ -38,11 +48,23 @@
             font-weight: 300;
             overflow-x: hidden;
         }
-        ::-webkit-scrollbar { width: 2px; }
-        ::-webkit-scrollbar-thumb { background: var(--accent); }
 
-        a { color: inherit; }
-        main { min-height: 70vh; }
+        ::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+        }
+
+        a {
+            color: inherit;
+        }
+
+        main {
+            min-height: 70vh;
+        }
+
         .container {
             width: min(100% - 32px, 1140px);
             max-width: 1140px;
@@ -56,11 +78,13 @@
             box-shadow: none;
             transition: padding .32s ease, background .32s ease, box-shadow .32s ease;
         }
+
         .navbar.navbar-scrolled {
             background: rgba(255, 250, 240, .98);
             padding: 11px 0;
             box-shadow: 0 10px 32px rgba(13, 100, 114, .12);
         }
+
         .navbar-brand {
             color: var(--ink) !important;
             font-family: var(--serif);
@@ -71,13 +95,21 @@
             text-transform: none;
             transition: font-size .32s ease;
         }
-        .navbar.navbar-scrolled .navbar-brand { font-size: 21px; }
-        .navbar-brand span { color: var(--ink) !important; }
+
+        .navbar.navbar-scrolled .navbar-brand {
+            font-size: 21px;
+        }
+
+        .navbar-brand span {
+            color: var(--ink) !important;
+        }
+
         .navbar-toggler {
             border: 1px solid var(--line);
             border-radius: var(--radius-sm);
             padding: 8px 10px;
         }
+
         .nav-link {
             color: var(--muted) !important;
             font-size: 12px;
@@ -89,6 +121,7 @@
             position: relative;
             transition: color .24s ease;
         }
+
         .nav-link::after {
             position: absolute;
             left: 18px;
@@ -102,9 +135,13 @@
             transform-origin: center;
             transition: opacity .24s ease, transform .24s ease;
         }
+
         .nav-link:hover,
         .nav-link.active,
-        .nav-link.is-current { color: var(--ink) !important; }
+        .nav-link.is-current {
+            color: var(--ink) !important;
+        }
+
         .nav-link:hover::after,
         .nav-link.active::after,
         .nav-link.is-current::after {
@@ -117,7 +154,10 @@
         .form-select,
         .card,
         .alert,
-        .badge { border-radius: var(--radius-md) !important; }
+        .badge {
+            border-radius: var(--radius-md) !important;
+        }
+
         .btn {
             border-width: 1px;
             border-radius: var(--radius-pill) !important;
@@ -129,55 +169,96 @@
             padding: 13px 28px;
             transition: background .24s ease, border-color .24s ease, color .24s ease, transform .24s ease;
         }
-        .btn:hover { transform: translateY(-2px); }
-        .btn-sm { padding: 9px 18px; font-size: 10px; }
-        .btn-lg { padding: 16px 36px; font-size: 12px; }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 9px 18px;
+            font-size: 10px;
+        }
+
+        .btn-lg {
+            padding: 16px 36px;
+            font-size: 12px;
+        }
+
         .btn-primary,
         .btn-dark {
             background: var(--accent) !important;
             border-color: var(--accent) !important;
             color: var(--ink-deep) !important;
         }
+
         .btn-primary:hover,
         .btn-dark:hover {
             background: var(--accent-soft) !important;
             border-color: var(--accent-soft) !important;
             color: var(--ink-deep) !important;
         }
+
         .btn-outline-primary,
         .btn-outline-dark {
             background: transparent !important;
             border-color: var(--line-strong) !important;
             color: var(--ink) !important;
         }
+
         .btn-outline-primary:hover,
         .btn-outline-dark:hover {
             background: var(--ink) !important;
             border-color: var(--ink) !important;
             color: var(--white) !important;
         }
+
         .btn-success {
             background: var(--accent) !important;
             border-color: var(--accent) !important;
             color: var(--ink-deep) !important;
         }
-        .text-primary,
-        .text-success { color: var(--ink) !important; }
-        .text-warning { color: var(--accent) !important; }
-        .bg-primary,
-        .bg-light { background: var(--ink) !important; }
-        .text-muted { color: var(--muted) !important; }
 
-        h1, h2, h3, h4, h5 {
+        .text-primary,
+        .text-success {
+            color: var(--ink) !important;
+        }
+
+        .text-warning {
+            color: var(--accent) !important;
+        }
+
+        .bg-primary,
+        .bg-light {
+            background: var(--ink) !important;
+        }
+
+        .text-muted {
+            color: var(--muted) !important;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
             color: var(--ink);
             font-family: var(--serif);
             font-weight: 400 !important;
             letter-spacing: 0;
         }
-        p { line-height: 1.85; }
 
-        .section-pad { padding: clamp(56px, 8vw, 90px) 0; }
-        .section-border { border-top: 1px solid var(--line); }
+        p {
+            line-height: 1.85;
+        }
+
+        .section-pad {
+            padding: clamp(56px, 8vw, 90px) 0;
+        }
+
+        .section-border {
+            border-top: 1px solid var(--line);
+        }
+
         .eyebrow {
             color: var(--muted);
             font-size: 11px;
@@ -186,6 +267,7 @@
             margin-bottom: 18px;
             text-transform: uppercase;
         }
+
         .page-header {
             background:
                 radial-gradient(circle at 18% 100%, rgba(247, 169, 0, .95) 0 18%, transparent 18.5%),
@@ -196,18 +278,27 @@
             padding: clamp(62px, 8vw, 82px) 0 clamp(46px, 7vw, 62px);
             text-align: center;
         }
-        .page-header .eyebrow { color: rgba(255, 255, 255, .74); }
-        .page-header h1 { color: var(--white); }
+
+        .page-header .eyebrow {
+            color: rgba(255, 255, 255, .74);
+        }
+
+        .page-header h1 {
+            color: var(--white);
+        }
+
         .page-header h1 {
             font-size: clamp(46px, 7vw, 88px);
             line-height: .96;
             margin-bottom: 18px;
         }
+
         .page-header p {
             color: rgba(255, 255, 255, .82);
             margin: 0 auto;
             max-width: 620px;
         }
+
         .card {
             background: rgba(255, 255, 255, .46);
             border: 1px solid var(--line) !important;
@@ -215,22 +306,27 @@
             transition: transform .28s ease, border-color .28s ease, background .28s ease;
             overflow: hidden;
         }
+
         .card.p-4,
         .card.p-md-5 {
             padding: clamp(20px, 4vw, 48px) !important;
         }
+
         .card:hover {
             border-color: var(--line-strong) !important;
             background: rgba(255, 255, 255, .62);
             transform: translateY(-3px);
         }
+
         iframe,
         img {
             max-width: 100%;
         }
+
         iframe {
             min-height: 320px;
         }
+
         .form-control,
         .form-select {
             background-color: var(--white);
@@ -239,17 +335,20 @@
             color: var(--ink);
             padding: 13px 14px;
         }
+
         .form-control:focus,
         .form-select:focus {
             border-color: var(--ink);
             box-shadow: 0 0 0 .16rem rgba(19, 120, 135, .12);
         }
+
         .form-label {
             color: var(--ink);
             font-size: 11px;
             letter-spacing: .12em;
             text-transform: uppercase;
         }
+
         .accordion {
             --bs-accordion-bg: transparent;
             --bs-accordion-border-color: var(--line);
@@ -259,12 +358,14 @@
             --bs-accordion-active-bg: transparent;
             --bs-accordion-active-color: var(--ink);
         }
+
         .accordion-item {
             background: transparent;
             border-color: var(--line) !important;
             border-left: 0;
             border-right: 0;
         }
+
         .accordion-button {
             background: transparent;
             color: var(--ink);
@@ -274,8 +375,15 @@
             padding: 22px 0;
             box-shadow: none !important;
         }
-        .accordion-button:not(.collapsed) { background: transparent; }
-        .accordion-button::after { filter: grayscale(1); }
+
+        .accordion-button:not(.collapsed) {
+            background: transparent;
+        }
+
+        .accordion-button::after {
+            filter: grayscale(1);
+        }
+
         .accordion-body {
             color: var(--muted);
             line-height: 1.85;
@@ -287,6 +395,7 @@
             color: var(--white);
             padding: 58px 0 34px;
         }
+
         footer h5 {
             color: var(--white);
             font-family: var(--sans);
@@ -295,12 +404,16 @@
             letter-spacing: .16em;
             text-transform: uppercase;
         }
+
         footer p,
         footer a,
         footer .text-muted {
             color: rgba(255, 255, 255, .72) !important;
         }
-        footer a:hover { color: var(--accent-soft) !important; }
+
+        footer a:hover {
+            color: var(--accent-soft) !important;
+        }
 
         #chatbot-bubble {
             position: fixed;
@@ -319,11 +432,13 @@
             text-decoration: none;
             transition: transform .2s, background .2s;
         }
+
         #chatbot-bubble:hover {
             background: var(--accent-soft);
             color: var(--ink-deep);
             transform: translateY(-3px);
         }
+
         #chatbot-bubble .chat-badge {
             position: absolute;
             top: -6px;
@@ -348,29 +463,42 @@
             transition-delay: var(--reveal-delay, 0ms);
             will-change: opacity, transform;
         }
+
         .reveal-on-scroll.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
+
         .reveal-fade {
             opacity: 0;
             transition: opacity .85s ease;
             transition-delay: var(--reveal-delay, 0ms);
         }
-        .reveal-fade.is-visible { opacity: 1; }
+
+        .reveal-fade.is-visible {
+            opacity: 1;
+        }
+
         .page-header .eyebrow,
         .page-header h1,
         .page-header p {
             animation: pageIntro .72s ease both;
         }
-        .page-header h1 { animation-delay: .08s; }
-        .page-header p { animation-delay: .16s; }
+
+        .page-header h1 {
+            animation-delay: .08s;
+        }
+
+        .page-header p {
+            animation-delay: .16s;
+        }
 
         @keyframes pageIntro {
             from {
                 opacity: 0;
                 transform: translateY(18px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -378,7 +506,10 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            html { scroll-behavior: auto; }
+            html {
+                scroll-behavior: auto;
+            }
+
             *,
             *::before,
             *::after {
@@ -387,6 +518,7 @@
                 scroll-behavior: auto !important;
                 transition-duration: .01ms !important;
             }
+
             .reveal-on-scroll,
             .reveal-fade {
                 opacity: 1;
@@ -404,15 +536,30 @@
                 margin-top: 16px;
                 padding-top: 14px;
             }
-            .nav-link { padding: 12px 0 !important; }
-            .nav-link::after { left: 0; right: 0; bottom: 6px; }
-            .navbar .btn { width: 100%; margin-top: 10px; }
+
+            .nav-link {
+                padding: 12px 0 !important;
+            }
+
+            .nav-link::after {
+                left: 0;
+                right: 0;
+                bottom: 6px;
+            }
+
+            .navbar .btn {
+                width: 100%;
+                margin-top: 10px;
+            }
+
             .page-header {
                 border-radius: 0 0 24px 24px;
             }
+
             .page-header h1 {
                 font-size: clamp(42px, 10vw, 68px);
             }
+
             footer {
                 padding: 46px 0 28px;
             }
@@ -428,51 +575,63 @@
             .container {
                 width: min(100% - 24px, 1140px);
             }
+
             .section-pad {
                 padding: 44px 0;
             }
+
             .navbar {
                 padding: 12px 0;
             }
+
             .navbar-brand,
             .navbar.navbar-scrolled .navbar-brand {
                 font-size: 20px;
             }
+
             .btn {
                 width: 100%;
                 min-height: 44px;
                 padding: 12px 18px;
                 white-space: normal;
             }
+
             .btn-sm {
                 width: auto;
                 min-height: 38px;
             }
+
             .page-header {
                 border-radius: 0 0 20px 20px;
                 padding: 42px 0 34px;
                 text-align: left;
             }
+
             .page-header h1 {
                 font-size: clamp(34px, 12vw, 48px);
                 margin-bottom: 12px;
             }
+
             .page-header p {
                 margin-left: 0;
                 font-size: 13px;
                 line-height: 1.65;
             }
+
             h2.display-5,
             .display-5 {
                 font-size: clamp(30px, 9vw, 42px);
             }
+
             .eyebrow {
                 font-size: 10px;
                 margin-bottom: 12px;
             }
+
             p {
                 line-height: 1.65;
             }
+
             #chatbot-bubble {
                 right: 16px;
                 bottom: 16px;
@@ -482,24 +641,49 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">Sejenak <span>Studio</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('home') ? 'is-current' : '' }}" href="{{ route('home') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('profil') ? 'is-current' : '' }}" href="{{ route('profil') }}">Profil</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('paket') ? 'is-current' : '' }}" href="{{ route('paket') }}">Paket</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('galeri') ? 'is-current' : '' }}" href="{{ route('galeri') }}">Galeri</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('informasi') ? 'is-current' : '' }}" href="{{ route('informasi') }}">Informasi</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('chatbot.index') ? 'is-current' : '' }}" href="{{ route('chatbot.index') }}">Chatbot</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('home') ? 'is-current' : '' }}"
+                            href="{{ route('home') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('profil') ? 'is-current' : '' }}"
+                            href="{{ route('profil') }}">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('paket') ? 'is-current' : '' }}"
+                            href="{{ route('paket') }}">Paket</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('galeri') ? 'is-current' : '' }}"
+                            href="{{ route('galeri') }}">Galeri</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('informasi') ? 'is-current' : '' }}"
+                            href="{{ route('informasi') }}">Informasi</a></li>
+                    <li class="nav-item"><a
+                            class="nav-link {{ request()->routeIs('chatbot.index') ? 'is-current' : '' }}"
+                            href="{{ route('chatbot.index') }}">Chatbot</a></li>
                     <li class="nav-item ms-lg-3">
-                        <a class="btn btn-primary px-4 {{ request()->routeIs('reservasi.*') ? 'active' : '' }}" href="{{ route('reservasi.index') }}">Reservasi</a>
+                        <a class="btn btn-primary px-4 {{ request()->routeIs('reservasi.*') ? 'active' : '' }}"
+                            href="{{ route('reservasi.index') }}">Reservasi</a>
                     </li>
+                    @auth
+                        <li class="nav-item ms-2">
+                            <div class="btn-group" role="group">
+                                <span class="nav-link">{{ Auth::user()->username }}</span>
+                                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                                </form>
+                            </div>
+                        </li>
+                    @else
+                        <li class="nav-item ms-2">
+                            <a class="btn btn-outline-primary btn-sm" href="{{ route('login') }}">Login</a>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>
@@ -514,7 +698,8 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h5 class="mb-3">Sejenak Studio</h5>
-                    <p class="small mb-0">Self photo studio di Purwokerto untuk menyimpan momen dengan tenang, rapi, dan personal.</p>
+                    <p class="small mb-0">Self photo studio di Purwokerto untuk menyimpan momen dengan tenang, rapi, dan
+                        personal.</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <h5 class="mb-3">Link Cepat</h5>
@@ -527,7 +712,8 @@
                 <div class="col-md-4 mb-4">
                     <h5 class="mb-3">Ikuti Kami</h5>
                     <div class="d-flex justify-content-center gap-3">
-                        <a href="https://instagram.com/sejenakselfphoto" target="_blank"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="https://instagram.com/sejenakselfphoto" target="_blank"><i
+                                class="fab fa-instagram fa-lg"></i></a>
                         <a href="#"><i class="fab fa-facebook fa-lg"></i></a>
                         <a href="#"><i class="fab fa-whatsapp fa-lg"></i></a>
                     </div>
@@ -566,7 +752,9 @@
             }
 
             setNavbarState();
-            window.addEventListener('scroll', setNavbarState, { passive: true });
+            window.addEventListener('scroll', setNavbarState, {
+                passive: true
+            });
 
             document.querySelectorAll('a[href^="#"]').forEach(function(link) {
                 link.addEventListener('click', function(event) {
@@ -576,7 +764,10 @@
                     event.preventDefault();
                     const offset = navbar.offsetHeight + 18;
                     const top = target.getBoundingClientRect().top + window.scrollY - offset;
-                    window.scrollTo({ top: top, behavior: 'smooth' });
+                    window.scrollTo({
+                        top: top,
+                        behavior: 'smooth'
+                    });
                 });
             });
 
@@ -616,4 +807,5 @@
         });
     </script>
 </body>
+
 </html>

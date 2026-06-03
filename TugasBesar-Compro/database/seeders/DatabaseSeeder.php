@@ -18,10 +18,14 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Admin Studio',
             'email' => 'admin@sejenak.com',
+            'username' => 'admin_studio',
+            'nomor_hp' => '081234567899',
             'password' => bcrypt('admin123'),
+            'role' => 'admin',
         ]);
 
         $this->call([
+            AdminSeeder::class,
             ServicePackageSeeder::class,
             FaqSeeder::class,
             GallerySeeder::class,
