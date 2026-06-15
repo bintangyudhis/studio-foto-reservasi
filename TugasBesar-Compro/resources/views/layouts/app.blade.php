@@ -70,39 +70,212 @@
             max-width: 1140px;
         }
 
+        /* === NAVBAR === */
         .navbar {
-            background: rgba(255, 250, 240, .96);
-            border-bottom: 1px solid var(--line);
-            backdrop-filter: blur(16px);
-            padding: 18px 0;
+            background: rgba(255, 250, 240, .97);
+            border-bottom: none;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 0;
             box-shadow: none;
-            transition: padding .32s ease, background .32s ease, box-shadow .32s ease;
+            transition: box-shadow .36s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1050;
         }
+
+        /* Garis bawah navbar — tipis, halus, tidak mengganggu */
+        .navbar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--line);
+            opacity: 1;
+        }
+
+        .navbar.navbar-scrolled::after { opacity: 0; } /* hilang saat ada shadow */
 
         .navbar.navbar-scrolled {
-            background: rgba(255, 250, 240, .98);
-            padding: 11px 0;
-            box-shadow: 0 10px 32px rgba(13, 100, 114, .12);
+            box-shadow: 0 4px 28px rgba(19, 120, 135, .12);
         }
 
+        /* Kompensasi tinggi navbar */
+        body { padding-top: 72px; }
+
+        /* Navbar-inner: container di dalam navbar */
+        .navbar-inner {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 68px;
+            transition: height .3s ease;
+        }
+
+        .navbar.navbar-scrolled .navbar-inner { height: 60px; }
+
+        /* Desktop: collapse berperilaku seperti flex row */
+        @media (min-width: 992px) {
+            .navbar-collapse {
+                display: flex !important;
+                align-items: center;
+                flex: 1;
+            }
+
+            /* Nav tengah: ambil sisa ruang, justify ke tengah */
+            #nav-center-links {
+                flex: 1;
+                justify-content: center;
+                flex-direction: row;
+            }
+
+            /* Nav kanan: dorong ke kanan */
+            #nav-right-links {
+                flex-direction: row;
+                flex-shrink: 0;
+            }
+        }
+
+        .navbar.reveal-on-scroll,
+        .navbar.reveal-fade {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+
+        /* === SCROLL PROGRESS BAR === */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: var(--accent);
+            z-index: 2000;
+            transition: width .1s linear;
+            border-radius: 0 3px 3px 0;
+        }
+
+        /* === HAMBURGER ANIMATION === */
+        .navbar-toggler {
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 8px 10px;
+            position: relative;
+            width: 40px;
+            height: 38px;
+        }
+        .navbar-toggler .ham-bar {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--ink);
+            margin: 4px auto;
+            transition: transform .3s ease, opacity .3s ease;
+            border-radius: 2px;
+        }
+        .navbar-toggler.is-open .ham-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+        .navbar-toggler.is-open .ham-bar:nth-child(2) { opacity: 0; }
+        .navbar-toggler.is-open .ham-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+        /* === MOBILE BACKDROP === */
+        #nav-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 100, 114, .28);
+            backdrop-filter: blur(4px);
+            z-index: 1040;
+        }
+        #nav-backdrop.active { display: block; }
+
+        /* === FLASH TOAST === */
+        #toast-container {
+            position: fixed;
+            top: 72px;
+            right: 20px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .alert-toast {
+            pointer-events: all;
+            min-width: 280px;
+            max-width: 380px;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,.14);
+            animation: toastIn .35s ease forwards;
+        }
+        .alert-toast.hide {
+            animation: toastOut .35s ease forwards;
+        }
+        .alert-toast--success { background: #137887; color: #fff; }
+        .alert-toast--error   { background: #c0392b; color: #fff; }
+        .alert-toast--warning { background: var(--accent); color: #0d6472; }
+        .alert-toast--info    { background: #0d6472; color: #fff; }
+        .alert-toast .toast-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+        .alert-toast .toast-close { margin-left: auto; cursor: pointer; opacity: .7; flex-shrink: 0; background: none; border: none; color: inherit; font-size: 16px; padding: 0; line-height: 1; }
+        .alert-toast .toast-close:hover { opacity: 1; }
+        @keyframes toastIn  { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(40px); } }
+
+        /* === FORM FOCUS GLOW === */
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--ink) !important;
+            box-shadow: 0 0 0 3px rgba(19, 120, 135, .18) !important;
+        }
+
+        /* ── Brand: horizontal, clean, tidak norak ──────── */
         .navbar-brand {
             color: var(--ink) !important;
+            text-decoration: none;
+            display: flex;
+            flex-direction: row;   /* sejajar */
+            align-items: baseline;
+            gap: 7px;
+            flex-shrink: 0;
+            line-height: 1;
+            transition: opacity .24s ease;
+        }
+
+        /* Nama utama: cukup besar, italic, serif */
+        .navbar-brand .brand-name {
             font-family: var(--serif);
-            font-size: 23px;
+            font-size: 22px;
             font-style: italic;
             font-weight: 400;
-            letter-spacing: .04em;
-            text-transform: none;
-            transition: font-size .32s ease;
+            letter-spacing: -.01em;
+            color: var(--ink);
+            line-height: 1;
         }
 
-        .navbar.navbar-scrolled .navbar-brand {
-            font-size: 21px;
+        /* Subtitle: kecil tracked, muted, sejajar di baseline */
+        .navbar-brand .brand-sub {
+            font-family: var(--sans);
+            font-style: normal;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .28em;
+            text-transform: uppercase;
+            color: var(--muted);
+            padding-bottom: 2px; /* optical align ke baseline */
         }
 
-        .navbar-brand span {
-            color: var(--ink) !important;
-        }
+        .navbar-brand:hover { opacity: .7; }
+        .navbar.navbar-scrolled .navbar-brand .brand-name { font-size: 20px; }
 
         .navbar-toggler {
             border: 1px solid var(--line);
@@ -112,41 +285,96 @@
 
         .nav-link {
             color: var(--muted) !important;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: .1em;
             text-transform: uppercase;
-            font-weight: 500;
-            padding-left: 18px !important;
-            padding-right: 18px !important;
+            font-weight: 600;
+            padding: 8px 13px !important;
             position: relative;
-            transition: color .24s ease;
+            transition: color .22s ease;
         }
 
+        /* Garis bawah hangat saat hover/active */
         .nav-link::after {
+            content: '';
             position: absolute;
-            left: 18px;
-            right: 18px;
             bottom: 2px;
-            height: 1px;
-            background: var(--accent);
-            content: "";
-            opacity: 0;
-            transform: scaleX(.35);
-            transform-origin: center;
-            transition: opacity .24s ease, transform .24s ease;
+            left: 13px;
+            right: 13px;
+            height: 1.5px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--ink));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .26s ease;
         }
 
-        .nav-link:hover,
+        .nav-link:hover { color: var(--ink) !important; }
+
         .nav-link.active,
-        .nav-link.is-current {
-            color: var(--ink) !important;
-        }
+        .nav-link.is-current { color: var(--ink) !important; }
 
         .nav-link:hover::after,
         .nav-link.active::after,
-        .nav-link.is-current::after {
-            opacity: 1;
-            transform: scaleX(1);
+        .nav-link.is-current::after { transform: scaleX(1); }
+
+        /* Separator dekoratif */
+        .nav-sep {
+            width: 1px;
+            height: 16px;
+            background: var(--line-strong);
+            opacity: .45;
+            margin: 0 8px;
+            flex-shrink: 0;
+        }
+
+        /* Auth chip */
+        .nav-user-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 14px 5px 5px;
+            background: rgba(19, 120, 135, .08);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink);
+            letter-spacing: .03em;
+        }
+
+        .nav-user-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .nav-logout-btn {
+            background: transparent;
+            border: 1px solid rgba(192,57,43,.35);
+            border-radius: var(--radius-pill);
+            color: #c0392b;
+            font-family: var(--sans);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: background .2s, border-color .2s;
+        }
+
+        .nav-logout-btn:hover {
+            background: rgba(192,57,43,.08);
+            border-color: rgba(192,57,43,.6);
         }
 
         .btn,
@@ -526,45 +754,115 @@
             }
         }
 
-        @media (max-width: 991.98px) {
-            :root {
-                --radius-lg: 20px;
-            }
-
-            .navbar-collapse {
-                border-top: 1px solid var(--line);
-                margin-top: 16px;
-                padding-top: 14px;
-            }
-
-            .nav-link {
-                padding: 12px 0 !important;
-            }
-
-            .nav-link::after {
-                left: 0;
-                right: 0;
-                bottom: 6px;
-            }
-
-            .navbar .btn {
-                width: 100%;
-                margin-top: 10px;
-            }
-
-            .page-header {
-                border-radius: 0 0 24px 24px;
-            }
-
-            .page-header h1 {
-                font-size: clamp(42px, 10vw, 68px);
-            }
-
-            footer {
-                padding: 46px 0 28px;
-            }
+        /* === PREMIUM FOOTER === */
+        footer {
+            background: linear-gradient(160deg, #0d5f6e 0%, #0a4a57 60%, #083d48 100%);
+            color: rgba(255, 250, 240, .85);
+            padding: 60px 0 32px;
+        }
+        .footer-brand {
+            font-family: var(--serif);
+            font-size: 24px;
+            color: var(--paper);
+            letter-spacing: -.01em;
+        }
+        .footer-brand span { color: var(--accent); }
+        .footer-heading {
+            font-family: var(--sans);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a, .footer-links span {
+            color: rgba(255, 250, 240, .65);
+            text-decoration: none;
+            font-size: 13px;
+            font-family: var(--sans);
+            transition: color .2s;
+        }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-social {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 250, 240, .1);
+            color: rgba(255, 250, 240, .8);
+            font-size: 15px;
+            text-decoration: none;
+            transition: background .2s, color .2s, transform .2s;
+        }
+        .footer-social:hover {
+            background: var(--accent);
+            color: var(--ink-deep);
+            transform: translateY(-3px);
         }
 
+        @media (max-width: 991.98px) {
+            :root { --radius-lg: 20px; }
+            .navbar-inner {
+                padding: 0 16px;
+                flex-wrap: wrap;
+            }
+
+            /* Mobile collapse: full-width, rapi */
+            .navbar-collapse {
+                width: 100%;
+                flex-basis: 100%;
+                border-top: 1px solid var(--line);
+                margin-top: 0;
+                padding: 8px 0 16px;
+                background: rgba(255,250,240,.99);
+                border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+                box-shadow: 0 12px 32px rgba(19,120,135,.1);
+            }
+
+            /* Di mobile: kedua ul stack vertikal */
+            .navbar-collapse .navbar-nav {
+                width: 100%;
+                flex-direction: column;
+                position: static !important;
+                transform: none !important;
+                top: auto !important;
+                left: auto !important;
+            }
+
+            /* Nav links di mobile */
+            .nav-link {
+                padding: 11px 16px !important;
+                border-radius: var(--radius-sm);
+                font-size: 12px;
+                border-bottom: 1px solid rgba(19,120,135,.07);
+            }
+
+            /* Hapus garis bawah animasi di mobile */
+            .nav-link::after { display: none; }
+
+            /* CTA & auth: full width, margin top */
+            .navbar-collapse .navbar-nav:last-child {
+                margin-top: 8px;
+                padding-top: 8px;
+                border-top: 1px solid var(--line);
+            }
+            .navbar .btn { width: 100%; margin-top: 4px; }
+            .page-header { border-radius: 0 0 24px 24px; }
+            .page-header h1 { font-size: clamp(42px, 10vw, 68px); }
+            footer { padding: 40px 0 24px; }
+        }
+
+
+        /* ─── BRAND: font fix di mobile ──────────────────────── */
         @media (max-width: 575.98px) {
             :root {
                 --radius-sm: 9px;
@@ -580,14 +878,9 @@
                 padding: 44px 0;
             }
 
-            .navbar {
-                padding: 12px 0;
-            }
-
-            .navbar-brand,
-            .navbar.navbar-scrolled .navbar-brand {
-                font-size: 20px;
-            }
+            /* Brand tetap kecil & rapi di mobile */
+            .navbar-brand .brand-name { font-size: 18px; }
+            .navbar-brand .brand-sub { font-size: 7px; letter-spacing: .2em; }
 
             .btn {
                 width: 100%;
@@ -643,84 +936,185 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">Sejenak <span>Studio</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+    {{-- Scroll Progress Bar --}}
+    <div id="scroll-progress"></div>
+
+    {{-- Mobile Backdrop --}}
+    <div id="nav-backdrop"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-light" id="main-navbar">
+        <div class="navbar-inner container" style="position:relative;">
+
+            {{-- Brand: kiri, stacked editorial --}}
+            <a class="navbar-brand" href="{{ route('home') }}">
+                <span class="brand-name">sejenak</span>
+                <span class="brand-sub">studio</span>
+            </a>
+
+            {{-- Hamburger --}}
+            <button class="navbar-toggler ms-auto" id="nav-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-label="Toggle navigation" aria-expanded="false">
+                <span class="ham-bar"></span>
+                <span class="ham-bar"></span>
+                <span class="ham-bar"></span>
             </button>
+
+            {{-- Nav: wrapper flex seluruhnya --}}
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('home') ? 'is-current' : '' }}"
-                            href="{{ route('home') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('profil') ? 'is-current' : '' }}"
-                            href="{{ route('profil') }}">Profil</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('paket') ? 'is-current' : '' }}"
-                            href="{{ route('paket') }}">Paket</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('galeri') ? 'is-current' : '' }}"
-                            href="{{ route('galeri') }}">Galeri</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('informasi') ? 'is-current' : '' }}"
-                            href="{{ route('informasi') }}">Informasi</a></li>
-                    <li class="nav-item"><a
-                            class="nav-link {{ request()->routeIs('chatbot.index') ? 'is-current' : '' }}"
-                            href="{{ route('chatbot.index') }}">Chatbot</a></li>
-                    <li class="nav-item ms-lg-3">
-                        <a class="btn btn-primary px-4 {{ request()->routeIs('reservasi.*') ? 'active' : '' }}"
-                            href="{{ route('reservasi.index') }}">Reservasi</a>
+
+                {{-- Link utama: TENGAH di desktop, stack di mobile --}}
+                <ul class="navbar-nav" id="nav-center-links">
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('home')      ? 'is-current' : '' }}" href="{{ route('home') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('profil')    ? 'is-current' : '' }}" href="{{ route('profil') }}">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('paket')     ? 'is-current' : '' }}" href="{{ route('paket') }}">Paket</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('galeri')    ? 'is-current' : '' }}" href="{{ route('galeri') }}">Galeri</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('informasi') ? 'is-current' : '' }}" href="{{ route('informasi') }}">Informasi</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('chatbot.*') ? 'is-current' : '' }}" href="{{ route('chatbot.index') }}">Chatbot</a></li>
+                </ul>
+
+                {{-- Auth + CTA: kanan di desktop, bawah di mobile --}}
+                <ul class="navbar-nav align-items-lg-center ms-lg-auto" id="nav-right-links">
+                    {{-- CTA --}}
+                    <li class="nav-item">
+                        <a class="btn btn-primary {{ request()->routeIs('reservasi.*') ? 'active' : '' }}"
+                           style="padding:9px 22px;"
+                           href="{{ route('reservasi.index') }}">Reservasi</a>
                     </li>
+
                     @auth
-                        <li class="nav-item ms-2">
-                            <div class="btn-group" role="group">
-                                <span class="nav-link">{{ Auth::user()->username }}</span>
-                                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                        <li class="nav-item ms-lg-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="nav-user-chip">
+                                    <span class="nav-user-avatar">{{ strtoupper(substr(Auth::user()->username, 0, 1)) }}</span>
+                                    {{ Auth::user()->username }}
+                                </span>
+                                <form action="{{ route('logout') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                                    <button type="submit" class="nav-logout-btn">Logout</button>
                                 </form>
                             </div>
                         </li>
                     @else
-                        <li class="nav-item ms-2">
+                        <li class="nav-item ms-lg-2">
                             <a class="btn btn-outline-primary btn-sm" href="{{ route('login') }}">Login</a>
                         </li>
                     @endauth
                 </ul>
             </div>
-        </div>
+
+        </div>{{-- /.navbar-inner --}}
     </nav>
+
+    {{-- Flash Toast Container --}}
+    <div id="toast-container">
+        @if(session('success'))
+            <div class="alert-toast alert-toast--success" role="alert">
+                <span class="toast-icon">✓</span>
+                <span>{{ session('success') }}</span>
+                <button class="toast-close" onclick="dismissToast(this)" aria-label="Tutup">✕</button>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert-toast alert-toast--error" role="alert">
+                <span class="toast-icon">✕</span>
+                <span>{{ session('error') }}</span>
+                <button class="toast-close" onclick="dismissToast(this)" aria-label="Tutup">✕</button>
+            </div>
+        @endif
+        @if($errors->any())
+            <div class="alert-toast alert-toast--warning" role="alert">
+                <span class="toast-icon">⚠</span>
+                <div>
+                    @foreach($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
+                </div>
+                <button class="toast-close" onclick="dismissToast(this)" aria-label="Tutup">✕</button>
+            </div>
+        @endif
+        @if(session('info'))
+            <div class="alert-toast alert-toast--info" role="alert">
+                <span class="toast-icon">ℹ</span>
+                <span>{{ session('info') }}</span>
+                <button class="toast-close" onclick="dismissToast(this)" aria-label="Tutup">✕</button>
+            </div>
+        @endif
+    </div>
 
     <main>
         @yield('content')
     </main>
 
     <footer>
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Sejenak Studio</h5>
-                    <p class="small mb-0">Self photo studio di Purwokerto untuk menyimpan momen dengan tenang, rapi, dan
-                        personal.</p>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Link Cepat</h5>
-                    <ul class="list-unstyled small">
-                        <li><a href="{{ route('paket') }}" class="text-decoration-none">Paket Layanan</a></li>
-                        <li><a href="{{ route('galeri') }}" class="text-decoration-none">Galeri Foto</a></li>
-                        <li><a href="{{ route('reservasi.index') }}" class="text-decoration-none">Buat Janji</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Ikuti Kami</h5>
-                    <div class="d-flex justify-content-center gap-3">
-                        <a href="https://instagram.com/sejenakselfphoto" target="_blank"><i
-                                class="fab fa-instagram fa-lg"></i></a>
-                        <a href="#"><i class="fab fa-facebook fa-lg"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp fa-lg"></i></a>
+        <div class="container">
+            <div class="row g-4">
+                <!-- Brand -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-3">Sejenak <span>Studio</span></div>
+                    <p class="small mb-3" style="color:rgba(255,250,240,.7); line-height:1.75;">
+                        Self photo studio di Purwokerto — tempat menyimpan momen dengan tenang, rapi, dan personal.
+                    </p>
+                    <div class="d-flex gap-3 mt-3">
+                        <a href="https://instagram.com/sejenakselfphoto" target="_blank" class="footer-social" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="footer-social" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://wa.me/6285878059861" target="_blank" class="footer-social" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
                     </div>
                 </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h6 class="footer-heading">Navigasi</h6>
+                    <ul class="footer-links">
+                        <li><a href="{{ route('home') }}">Beranda</a></li>
+                        <li><a href="{{ route('profil') }}">Profil Studio</a></li>
+                        <li><a href="{{ route('paket') }}">Paket Layanan</a></li>
+                        <li><a href="{{ route('galeri') }}">Galeri Foto</a></li>
+                        <li><a href="{{ route('informasi') }}">Informasi</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h6 class="footer-heading">Layanan</h6>
+                    <ul class="footer-links">
+                        <li><a href="{{ route('reservasi.index') }}">Buat Reservasi</a></li>
+                        <li><a href="{{ route('chatbot.index') }}">Chatbot FAQ</a></li>
+                        <li><a href="{{ route('login') }}">Login Akun</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div class="col-lg-4 col-md-6">
+                    <h6 class="footer-heading">Kontak & Lokasi</h6>
+                    <ul class="footer-links">
+                        <li style="display:flex;gap:10px;align-items:flex-start;">
+                            <i class="fas fa-map-marker-alt mt-1" style="color:var(--accent);flex-shrink:0;"></i>
+                            <span>Purwokerto, Jawa Tengah, Indonesia</span>
+                        </li>
+                        <li style="display:flex;gap:10px;align-items:center;">
+                            <i class="fab fa-whatsapp" style="color:var(--accent);flex-shrink:0;"></i>
+                            <a href="https://wa.me/6285878059861" target="_blank">+62 858-7805-9861</a>
+                        </li>
+                        <li style="display:flex;gap:10px;align-items:center;">
+                            <i class="fab fa-instagram" style="color:var(--accent);flex-shrink:0;"></i>
+                            <a href="https://instagram.com/sejenakselfphoto" target="_blank">@sejenakselfphoto</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <hr class="mt-4 border-secondary">
-            <p class="small mb-0">&copy; 2024 Sejenak Studio Purwokerto. All rights reserved.</p>
+
+            <hr style="border-color:rgba(255,250,240,.15); margin:32px 0 20px;">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+                <p class="small mb-0" style="color:rgba(255,250,240,.5);">© {{ date('Y') }} Sejenak Studio Purwokerto. All rights reserved.</p>
+                <p class="small mb-0" style="color:rgba(255,250,240,.35);">Self Photo Studio · Purwokerto</p>
+            </div>
         </div>
     </footer>
 
@@ -731,62 +1125,103 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // === TOAST DISMISS ===
+        function dismissToast(btn) {
+            const toast = btn.closest('.alert-toast');
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 380);
+        }
+        // Auto-dismiss toasts after 5s
+        document.querySelectorAll('.alert-toast').forEach(function(t) {
+            setTimeout(() => { if (t.isConnected) dismissToast(t.querySelector('.toast-close')); }, 5000);
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
-            const navbar = document.querySelector('.navbar');
+            const navbar  = document.getElementById('main-navbar');
+            const toggler = document.getElementById('nav-toggler');
             const navCollapse = document.getElementById('navbarNav');
+            const backdrop    = document.getElementById('nav-backdrop');
+            const progressBar = document.getElementById('scroll-progress');
+
+            // === SCROLL PROGRESS BAR ===
+            function updateProgress() {
+                const docH = document.documentElement.scrollHeight - window.innerHeight;
+                progressBar.style.width = (docH > 0 ? (window.scrollY / docH) * 100 : 0) + '%';
+            }
+
+            // === NAVBAR: scroll-aware shadow only (always visible) ===
+            function handleNavbarScroll() {
+                const cur = window.scrollY;
+                navbar.classList.toggle('navbar-scrolled', cur > 40);
+                updateProgress();
+            }
+
+            handleNavbarScroll();
+            window.addEventListener('scroll', handleNavbarScroll, { passive: true });
+
+            // === HAMBURGER ANIMATION ===
+            toggler.addEventListener('click', function() {
+                toggler.classList.toggle('is-open');
+                const isOpen = toggler.classList.contains('is-open');
+                backdrop.classList.toggle('active', isOpen);
+            });
+            backdrop.addEventListener('click', function() {
+                backdrop.classList.remove('active');
+                toggler.classList.remove('is-open');
+                bootstrap.Collapse.getOrCreateInstance(navCollapse).hide();
+            });
+            navCollapse.addEventListener('hidden.bs.collapse', function() {
+                toggler.classList.remove('is-open');
+                backdrop.classList.remove('active');
+            });
+
+            // === SMOOTH SCROLL ===
+            document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+                link.addEventListener('click', function(event) {
+                    const target = document.querySelector(link.getAttribute('href'));
+                    if (!target) return;
+                    event.preventDefault();
+                    const offset = navbar.offsetHeight + 18;
+                    window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+                });
+            });
+
+            // Close mobile nav on link click
+            document.querySelectorAll('.navbar-nav .nav-link, .navbar-nav .btn').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (!navCollapse.classList.contains('show')) return;
+                    bootstrap.Collapse.getOrCreateInstance(navCollapse).hide();
+                });
+            });
+
+            // === REVEAL ON SCROLL (staggered) ===
             const revealTargets = document.querySelectorAll([
-                'main > section',
+                'main > section:not([data-hero-gallery])',
                 '.section-heading',
-                '.card',
                 '.package-card',
                 '.price-card',
                 '.gallery-item',
                 '.quote-box',
                 '.background-tile',
-                '.border-top',
                 'footer .col-md-4'
             ].join(','));
 
-            function setNavbarState() {
-                navbar.classList.toggle('navbar-scrolled', window.scrollY > 24);
-            }
-
-            setNavbarState();
-            window.addEventListener('scroll', setNavbarState, {
-                passive: true
+            // Stagger sibling cards within same parent
+            const parentMap = new Map();
+            revealTargets.forEach(function(el) {
+                const p = el.parentElement;
+                if (!parentMap.has(p)) parentMap.set(p, []);
+                parentMap.get(p).push(el);
             });
-
-            document.querySelectorAll('a[href^="#"]').forEach(function(link) {
-                link.addEventListener('click', function(event) {
-                    const target = document.querySelector(link.getAttribute('href'));
-                    if (!target) return;
-
-                    event.preventDefault();
-                    const offset = navbar.offsetHeight + 18;
-                    const top = target.getBoundingClientRect().top + window.scrollY - offset;
-                    window.scrollTo({
-                        top: top,
-                        behavior: 'smooth'
-                    });
-                });
-            });
-
-            document.querySelectorAll('.navbar-nav .nav-link, .navbar-nav .btn').forEach(function(link) {
-                link.addEventListener('click', function() {
-                    if (!navCollapse || !navCollapse.classList.contains('show')) return;
-                    bootstrap.Collapse.getOrCreateInstance(navCollapse).hide();
-                });
-            });
-
-            revealTargets.forEach(function(element, index) {
+            revealTargets.forEach(function(element) {
+                const siblings = parentMap.get(element.parentElement) || [];
+                const idx = siblings.indexOf(element);
                 element.classList.add('reveal-on-scroll');
-                element.style.setProperty('--reveal-delay', Math.min(index % 6, 5) * 55 + 'ms');
+                element.style.transitionDelay = (Math.min(idx, 5) * 80) + 'ms';
             });
 
             if (!('IntersectionObserver' in window)) {
-                revealTargets.forEach(function(element) {
-                    element.classList.add('is-visible');
-                });
+                revealTargets.forEach(el => el.classList.add('is-visible'));
                 return;
             }
 
@@ -796,14 +1231,9 @@
                     entry.target.classList.add('is-visible');
                     observer.unobserve(entry.target);
                 });
-            }, {
-                threshold: .12,
-                rootMargin: '0px 0px -70px 0px'
-            });
+            }, { threshold: .1, rootMargin: '0px 0px -60px 0px' });
 
-            revealTargets.forEach(function(element) {
-                observer.observe(element);
-            });
+            revealTargets.forEach(el => observer.observe(el));
         });
     </script>
 </body>

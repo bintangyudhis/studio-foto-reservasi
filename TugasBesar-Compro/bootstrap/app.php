@@ -16,5 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Tangani upload terlalu besar → redirect balik dengan pesan error yang jelas
+        $exceptions->render(function (
+            \Illuminate\Http\Exceptions\PostTooLargeException $e,
+            \Illuminate\Http\Request $request
+        ) {
+            return redirect()->back()->withErrors([
+                'image' => 'Ukuran file terlalu besar. Maksimal upload adalah 20MB. Silakan kompres foto terlebih dahulu.',
+            ])->withInput();
+        });
     })->create();

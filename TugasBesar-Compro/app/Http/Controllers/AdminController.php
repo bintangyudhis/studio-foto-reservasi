@@ -7,6 +7,7 @@ use App\Models\ServicePackage;
 use App\Models\Gallery;
 use App\Models\Faq;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -28,6 +29,38 @@ class AdminController extends Controller
     }
 
     // --- RESERVATION MANAGEMENT ---
+
+    /**
+     * AJAX: Data kalender reservasi untuk admin.
+     * GET /admin/reservasi/calendar-data?year=YYYY&month=MM
+     */
+    public function calendarData(Request $request)
+    {
+        $year  = (int) $request->query('year',  date('Y'));
+        $month = (int) $request->query('month', date('m'));
+
+        $reservations = Reservation::with('servicePackage')
+            ->whereYear('reservation_date', $year)
+            ->whereMonth('reservation_date', $month)
+            ->orderBy('reservation_date')
+            ->orderBy('reservation_time')
+            ->get()
+            ->map(fn($r) => [
+                'id'      => $r->id,
+                'name'    => $r->name,
+                'phone'   => $r->phone,
+                'package' => optional($r->servicePackage)->name,
+                'background' => $r->background,
+                'date'    => Carbon::parse($r->reservation_date)->format('Y-m-d'),
+                'time'    => substr($r->reservation_time, 0, 5),
+                'count'   => $r->head_count,
+                'status'  => $r->status,
+                'notes'   => $r->notes,
+            ]);
+
+        return response()->json(['reservations' => $reservations]);
+    }
+
     public function reservations()
     {
         $reservations = Reservation::with('servicePackage')->latest()->get();
@@ -154,9 +187,9 @@ class AdminController extends Controller
     public function storeGallery(Request $request)
     {
         $data = $request->validate([
-            'title' => 'nullable|string',
+            'title'    => 'nullable|string',
             'category' => 'required|string',
-            'image' => 'nullable|image',
+            'image'    => 'nullable|image|mimes:jpeg,jpg,png,webp|max:20480', // maks 20MB
         ]);
 
         $categoryCount = Gallery::where('category', $request->category)->count();
@@ -167,9 +200,8 @@ class AdminController extends Controller
         $data['title'] = $request->input('title', 'Gallery');
 
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images/galleries'), $imageName);
-            $data['image'] = $imageName;
+            $destination   = public_path('images/galleries');
+            $data['image'] = $this->compressAndSaveImage($request->file('image'), $destination);
         } else {
             $data['image'] = 'default.png';
         }
@@ -178,11 +210,74 @@ class AdminController extends Controller
         return back()->with('success', 'Foto Galeri berhasil ditambah.');
     }
 
+    /**
+     * Compress & resize image using PHP GD (built-in).
+     * - JPEG/WebP: quality 75
+     * - PNG: compression level 7
+     * - Resize if width > 1920px (maintain aspect ratio)
+     */
+    private function compressAndSaveImage(\Illuminate\Http\UploadedFile $file, string $destination): string
+    {
+        $maxWidth = 1920;
+        $quality  = 75;
+        $mime     = $file->getMimeType();
+        $ext      = match(true) {
+            str_contains($mime, 'png')  => 'png',
+            str_contains($mime, 'webp') => 'webp',
+            default                     => 'jpg',
+        };
+        $fileName = time() . '_' . uniqid() . '.' . $ext;
+        $destPath = $destination . DIRECTORY_SEPARATOR . $fileName;
+
+        $src = match(true) {
+            str_contains($mime, 'png')  => @imagecreatefrompng($file->getRealPath()),
+            str_contains($mime, 'webp') => @imagecreatefromwebp($file->getRealPath()),
+            default                     => @imagecreatefromjpeg($file->getRealPath()),
+        };
+
+        if (!$src) {
+            // GD failed — move file as-is
+            $fallback = time() . '.' . $file->extension();
+            $file->move($destination, $fallback);
+            return $fallback;
+        }
+
+        $origW = imagesx($src);
+        $origH = imagesy($src);
+
+        if ($origW > $maxWidth) {
+            $newW = $maxWidth;
+            $newH = (int) round($origH * ($maxWidth / $origW));
+            $dst  = imagecreatetruecolor($newW, $newH);
+            if (str_contains($mime, 'png')) {
+                imagealphablending($dst, false);
+                imagesavealpha($dst, true);
+                imagefilledrectangle($dst, 0, 0, $newW, $newH,
+                    imagecolorallocatealpha($dst, 255, 255, 255, 127));
+            }
+            imagecopyresampled($dst, $src, 0, 0, 0, 0, $newW, $newH, $origW, $origH);
+            imagedestroy($src);
+            $src = $dst;
+        }
+
+        if (str_contains($mime, 'png')) {
+            imagepng($src, $destPath, 7);
+        } elseif (str_contains($mime, 'webp')) {
+            imagewebp($src, $destPath, $quality);
+        } else {
+            imagejpeg($src, $destPath, $quality);
+        }
+
+        imagedestroy($src);
+        return $fileName;
+    }
+
     public function deleteGallery(Gallery $gallery)
     {
         $gallery->delete();
         return back()->with('success', 'Foto Galeri berhasil dihapus.');
     }
+
 
     // --- USER MANAGEMENT ---
     public function users()

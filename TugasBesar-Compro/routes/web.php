@@ -46,6 +46,9 @@ Route::redirect('/kontak', '/informasi')->name('kontak');
 Route::get('/reservasi', [ReservationController::class, 'index'])->middleware('auth')->name('reservasi.index');
 Route::post('/reservasi', [ReservationController::class, 'store'])->middleware('auth')->name('reservasi.store');
 Route::get('/reservasi/sukses', [ReservationController::class, 'success'])->middleware('auth')->name('reservasi.success');
+// AJAX — tidak perlu auth agar bisa diakses sebelum login juga
+Route::get('/reservasi/slots',    [ReservationController::class, 'getSlots'])->name('reservasi.slots');
+Route::get('/reservasi/calendar', [ReservationController::class, 'getCalendar'])->name('reservasi.calendar');
 
 // --- AUTH ROUTES (Register & Login) ---
 Route::get('/register', [AuthController::class, 'showRegister'])->middleware('guest')->name('register');
@@ -99,5 +102,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
         Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
         Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.destroy');
+
+        // Admin Calendar AJAX
+        Route::get('/reservasi/calendar-data', [AdminController::class, 'calendarData'])->name('admin.reservations.calendar');
     });
 });
