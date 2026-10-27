@@ -53,6 +53,10 @@ Website dapat dibuka di `http://127.0.0.1:8000`. Panel admin berada di `/admin/l
 
 Dokumentasi proyek yang lebih rinci tersedia di berkas `TugasBesar-Compro/PROJECT_DOCS.md`.
 
+## Tangkapan Layar
+
+![Tangkapan layar halaman utama](docs/screenshot.png)
+
 ## Lisensi
 
 Proyek ini memakai lisensi MIT. Lihat berkas [LICENSE](LICENSE).
